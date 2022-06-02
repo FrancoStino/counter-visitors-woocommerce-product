@@ -15,7 +15,7 @@ class VisitorCounter {
      * @var string $file Relative path to the tracking file.
      */
 
-    public $file = 'users/';
+    public $file = 'users-visitors/';
 
     /**
      * @var int $expires Automatically expire vistor after X amount of seconds.
