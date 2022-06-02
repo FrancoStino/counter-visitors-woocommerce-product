@@ -41,8 +41,8 @@ class VisitorCounter {
      */
     public function getPath() {
 
-        $path = get_stylesheet_directory() . '/' . ltrim( $this->file, '/' ) . get_the_ID() . '.db';
-
+		$post_id = $_GET['post_id'];
+        $path = get_stylesheet_directory() . '/' . ltrim( $this->file, '/' ) . 'product-view-id-' . $post_id . '.db';
         $exists = file_exists( $path );
 
         if ( !$exists ) {
@@ -166,7 +166,6 @@ function visitor_counter() {
 add_action( 'wp_ajax_active_visitor', 'handle_visitor_activity' );
 add_action( 'wp_ajax_nopriv_active_visitor', 'handle_visitor_activity' );
 function handle_visitor_activity() {
-	$post_id = $_POST["post_id"];
     $controller = visitor_counter();
     $controller->logUser();
     wp_send_json_success( count( $controller->getData() ) );
@@ -184,7 +183,8 @@ if ( is_product()) {
     // Load php data that can be accessed in javascript.
     wp_localize_script( 'visitor-counter', 'VisitorCounterVars', [
         'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-        'ajaxAction' => 'active_visitor'
+        'ajaxAction' => 'active_visitor',
+		'post_id'=> get_the_id()
     ] );
 }
 } );
