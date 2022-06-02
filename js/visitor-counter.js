@@ -1,4 +1,4 @@
-( function( $ ) {
+(function($) {
 
     window.VisitorCounter = window?.VisitorCounter || {
 
@@ -13,9 +13,9 @@
          * @param varName
          * @returns {*}
          */
-        getVar( varName ) {
+        getVar(varName) {
             const vars = window?.VisitorCounterVars;
-            return vars?.[ varName ];
+            return vars?.[varName];
         },
 
         /**
@@ -24,25 +24,28 @@
          * @returns {Promise<unknown>}
          */
         request() {
-            return new Promise( ( accept, reject ) => {
-                const url = this.getVar( 'ajaxUrl' );
-                const action = this.getVar( 'ajaxAction' );
+            return new Promise((accept, reject) => {
+                const url = this.getVar('ajaxUrl');
+                const action = this.getVar('ajaxAction');
+                const post_id = this.getVar('post_id');
 
-                if ( url && action ) {
-                    $.ajax( {
+                if (url && action) {
+                    $.ajax({
                         url: url,
                         data: {
-                            action: action
+                            action: action,
+                            post_id: post_id
                         },
                         cache: false
-                    } ).then( response => {
+                    }).then(response => {
                         this._temp.count = response.data;
-                        accept( response );
-                    } );
+                        accept(response);
+                        console.log(response);
+                    });
                 } else {
-                    reject( 'Visitor counter ajax url or action not available.' );
+                    reject('Visitor counter ajax url or action not available.');
                 }
-            } );
+            });
         },
 
         /**
@@ -51,7 +54,7 @@
          * @returns {number}
          */
         getCount() {
-            return parseInt( this._temp?.count || 0 );
+            return parseInt(this._temp?.count || 0);
         },
 
         /**
@@ -60,34 +63,34 @@
          * @param {callback} callback
          * @param {number} timeout
          */
-        refresh( callback, timeout ) {
+        refresh(callback, timeout) {
             this._temp.lastRefreshed = Date.now();
 
-            this.request().then( () => {
+            this.request().then(() => {
                 const now = Date.now();
 
-                callback.apply( this );
+                callback.apply(this);
 
                 const timeoutDiff = now - this._temp.lastRefreshed;
 
                 // If request took longer than timeout, run next refresh instantly.
-                if ( timeout && timeoutDiff >= timeout ) {
-                    this.refresh( callback, timeout );
+                if (timeout && timeoutDiff >= timeout) {
+                    this.refresh(callback, timeout);
                 }
 
                 // Request was quicker than timeout, queue next refresh call.
                 else {
-                    setTimeout( () => {
-                        this.refresh( callback, timeout );
-                    }, timeout - timeoutDiff );
+                    setTimeout(() => {
+                        this.refresh(callback, timeout);
+                    }, timeout - timeoutDiff);
                 }
-            } );
+            });
         }
     };
 
     // Initiate refresh loop
-    VisitorCounter.refresh( function() {
-        $( '#customer_count span' ).text( VisitorCounter.getCount() );					
-    }, 2000 );	
-							
-} )( jQuery );
+    VisitorCounter.refresh(function() {
+        $('#customer_count span').text(VisitorCounter.getCount());
+    }, 2000);
+
+})(jQuery);
