@@ -3,7 +3,7 @@
 // function that runs when shortcode is called
 add_shortcode('counter', 'counter');
 function counter() { ?>
-<p id="customer_count" align="center" style="padding:10px; background:#F9F0E5; border:solid 2px rgb(82,46,31); border-radius:50px; font-size: 16px; font-weight: 500; color:rgb(82,46,31)"><span style="font-style:20px; font-weight: 900; padding-right:5px;"></span> utenti che lo osservano</p>
+<div id="customer_count" align="center" style="padding:10px; background:#F9F0E5; border:solid 2px rgb(82,46,31); border-radius:50px; font-size: 16px; font-weight: 500; color:rgb(82,46,31)"><span style="font-style:20px; font-weight: 900; padding-right:5px;"></span> utenti che lo osservano</div>
 <?php }
 
 
